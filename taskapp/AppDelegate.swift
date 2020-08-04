@@ -7,16 +7,34 @@
 //
 
 import UIKit
+import UserNotifications    // Lesson6_7.2で追加
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
 
+ // UNUserNotificationCenterDelegateをLesson6_7.5で追加
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // ユーザに通知の許可を求める --- ここからLesson6_7.2で追加 ---
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+        // centerに対してrequestAuthorization(options:completionHandler:)メソッドで、通知、音を使うことを指定して呼び出し
+        }
+        // --- ここまでLesson6_7.2で追加 ---
+        
+        center.delegate = self     // Lesson6_7.5で追加
+        
         return true
     }
+    // アプリの初回起動時にユーザに許可を求めるアラートが表示されるようになる
+    
+    // アプリがフォアグラウンドの時に通知を受け取ると呼ばれるメソッド --- ここからLesson6_7.5で追加 ---
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.alert, .sound])
+    } // --- ここまでLesson6_7.5で追加 ---
 
     // MARK: UISceneSession Lifecycle
 
